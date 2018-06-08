@@ -16,6 +16,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
         }
         return event;
       }),
+/*
       catchError((error, caught) => {
 
           console.log('***** caught:', caught);
@@ -25,6 +26,7 @@ export class HttpResponseInterceptor implements HttpInterceptor {
 
         return of([]);
       })
+*/
     );
   }
 }

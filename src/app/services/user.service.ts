@@ -16,7 +16,7 @@ export class UserService {
   /* GET Users List */
   getUsers(): Observable<User[]> {
     return this.http.get<any>(`${this.apiUrl}user2`).pipe(
-      catchError(this.handleError('GET Users List'))
+      catchError(this.handleError('GET Users List', []))
     );
   }
 

@@ -1,0 +1,12 @@
+<app-layout>
+  <p>
+    list works!
+  </p>
+  <ul>
+    <li *ngFor="let user of users">
+      {{user.first_name}}
+      {{user.last_name}}
+      {{!user.first_name && !user.last_name ? user.username : null}}
+    </li>
+  </ul>
+</app-layout>

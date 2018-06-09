@@ -1,0 +1,8 @@
+{
+  "/rest/*": {
+    "target": "https://test-api.live.gbksoft.net",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}

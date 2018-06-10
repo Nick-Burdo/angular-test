@@ -205,6 +205,20 @@ Add component and link to each page route into main routes.
 Add `canActivated` property to the Profile Page route 
 (`explorer/src/app/app-routing.module.ts`).
 
+#### Login via Facebook
+
+Connect Facebook SDK in `src/index.html`:
+```
+  <script src="https://connect.facebook.net/en_US/sdk.js"></script>
+```
+
+Implement `init()`, `getStatus()` & `login()` functions of Facebook SDK
+(`src/app/auth/login/login.component.ts`). 
+
+Request login via Facebook to API.
+
+#### Implement Templates
+
 Import `UiModule` into the `AuthModule`.
 
 Implement templates of components. Template's content of `ProfileComponent` must be inside the `<app-layout>` element

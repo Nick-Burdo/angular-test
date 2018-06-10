@@ -16,9 +16,18 @@
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
 -->
-    <button class="btn btn-lg btn-primary btn-block" (click)="login()">
+    <button class="btn btn-lg btn-primary btn-block mb-3" (click)="login()" [disabled]="pending">
+      <span *ngIf="pending; else elseBlock2"><i class="fa fa-spinner fa-spin"></i></span>
+      <ng-template #elseBlock2>
+        Forse Sign In
+      </ng-template>
+    </button>
+    <button class="btn btn-lg btn-primary btn-block" (click)="fbLogin()" [disabled]="pending">
       <span *ngIf="pending; else elseBlock"><i class="fa fa-spinner fa-spin"></i></span>
-      <ng-template #elseBlock>Sign In via Facebook</ng-template>
+      <ng-template #elseBlock>
+        <i class="fa fa-facebook fa-fw"></i>
+        Sign In via Facebook
+      </ng-template>
     </button>
     <p class="mt-3 mb-3 text-muted">© 2018</p>
   </div>

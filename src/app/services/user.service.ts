@@ -4,27 +4,26 @@ import {User} from '../users/user';
 import {HttpClient} from '@angular/common/http';
 import {catchError} from 'rxjs/operators';
 import {Profile} from '../auth/profile';
+import {API_URL} from '../config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  // apiUrl = 'https://test-api.live.gbksoft.net/rest/v1/';
-  apiUrl = '/rest/v1';
 
   constructor(private http: HttpClient) {
   }
 
   /* GET Users List */
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.apiUrl}/user`).pipe(
+    return this.http.get<User[]>(`${API_URL}/user`).pipe(
       catchError(this.handleError('GET Users List', []))
     );
   }
 
-  /* GET Current Users Data */
+  /* GET Current User Data */
   getCurrentUser(): Observable<Profile> {
-    return this.http.get<Profile>(`${this.apiUrl}/user/current`).pipe(
+    return this.http.get<any>(`${API_URL}/user/current`).pipe(
       catchError(this.handleError('GET Current User'))
     );
   }

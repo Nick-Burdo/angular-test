@@ -2,6 +2,8 @@
 
 ## Development sequence
 
+### Create App
+
 Create new Angular App with `SCSS` support and routing:
 ```
 $ ng new explorer --style=scss --routing
@@ -18,6 +20,100 @@ Add import `Bootstrap` & `FontAwesome` styles:
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~font-awesome/css/font-awesome.css";
 ```
+
+### Use Proxy
+
+For correct recognize response errors of `http` requests we need use proxy.
+
+Create `proxy.conf.json`:
+```
+{
+  "/rest/*": {
+    "target": "https://test-api.live.gbksoft.net",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
+  }
+}
+```
+
+Add real API URL to the `src/environments/environment.ts` and `src/environments/environment.prod.ts`:
+```
+  apiUrl: 'https://test-api.live.gbksoft.net/rest/v1'
+```
+
+Create `src/environments/environment.dev.ts`:
+```
+export const environment = {
+  production: false,
+  apiUrl: '/rest/v1'
+};
+```
+
+Set `development` environment in the `angular.json`:
+```
+  ...
+  "projects": {
+    ...
+    "architect": {
+      "build": {
+        ...
+        "configurations": {
+          "production": {...},
+          "development": {
+            "fileReplacements": [
+              {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.dev.ts"
+              }
+            ]
+          }
+        }
+      },
+      "serve": {
+        ...
+        "configurations": {
+          "production": {...},
+          "development": {
+            "browserTarget": "explorer:build:development"
+          }
+        }
+      },
+      ...
+```
+
+Add parameters to `ng serve` in `start` script of `package,json`:
+```
+  "scripts": {
+    "start": "ng serve  --proxy-config proxy.conf.json --configuration=development",
+    ...
+```
+
+Now you can use the `environment.apiUrl` parameter in the `src/app/config.ts`:
+
+
+### Create services
+
+Create interceptor (`explorer/src/app/services/http-response-interceptor.ts`) for:
+ - convert API response to appropriate data format
+ - reconnize Error 401 & redirect to Login Form
+ 
+Add interceptor as `provider` into `explorer/src/app/app.module.ts`
+
+Generate `AuthService` & `AuthGardService`:
+```
+$ ng generate service services/auth
+$ ng generate service services/auth-gard
+```
+Implement `AuthService` & `AuthGardService`
+
+Create model `User` (`explorer/src/app/users/user.ts`)
+
+Generate and implement `UserService`
+
+
+### Create Layout
+
 Generate `UiModule` with automatically import the in main `AppModule`:
 ```
 $ ng generate module ui --module app.module
@@ -40,7 +136,29 @@ Export the `LayoutComponent`:
 })
 ```
 
-Generate `UsersModule` with automatically import the in main `AppModule`:
+Generate `PageNotFound` Component in the `UiModule`
+```
+$ ng generate component ui/page-not-found
+```
+Implement component's template inside the `<app-layout>` element
+
+
+
+### Create Routing
+
+Change content of `explorer/src/app/app.component.html`:
+```
+<router-outlet></router-outlet>
+```
+
+Implement main routes in the `explorer/src/app/app-routing.module.ts`
+
+
+
+
+### Create List Page, Map Page & User-Profile Page
+
+Generate `UsersModule` with automatically import the in main `AppModule` and `routing`:
 ```
 $ ng generate module users --module app.module --routing
 ```
@@ -53,6 +171,10 @@ $ ng generate component users/list
 $ ng generate component ui/map
 $ ng generate component ui/user-profile
 ```
+
+Add component, link and `canActivated` property to each page route into main routes 
+(`explorer/src/app/app-routing.module.ts`).
+
 Imports `UiModule` in the `explorer/src/app/users/users.module.ts`
 ```
 @NgModule({
@@ -64,56 +186,28 @@ Imports `UiModule` in the `explorer/src/app/users/users.module.ts`
 })
 ```
 
-Wrap content of `UserModule` component templates with `<app-layout></app-layout>`
+Implement template's content of components, each must be inside the `<app-layout>` element
 
-Change content of `explorer/src/app/app.component.html`:
-```
-<router-outlet></router-outlet>
-```
-
-Generate `PageNotFound` Component in the `UiModule`
-```
-$ ng generate component ui/page-not-found
-```
-
-Set main routes in the `explorer/src/app/app-routing.module.ts`
+### Create Login Page & Profile Page
 
 Generate `AuthModule`:
 ```
 $ ng generate module auth --module app.module --routing
 ```
+
 Generate 2 components inside the `AuthModule`
 ```
 $ ng generate component auth/login
 $ ng generate component auth/profile
 ```
 
-Import `UiModule` into the `AuthModule` and wrap template's content of `ProfileComponent` 
-to `<app-layout>` element.
+Add component and link to each page route into main routes. 
+Add `canActivated` property to the Profile Page route 
+(`explorer/src/app/app-routing.module.ts`).
 
-Add `LoginComponent`, `ProfileComponent` and their links into main routes 
-(`explorer/src/app/app-routing.module.ts`)
+Import `UiModule` into the `AuthModule`.
 
-Generate `AuthService` & `AuthGardService`:
-```
-$ ng generate service services/auth
-$ ng generate service services/auth-gard
-```
-Implement `AuthService` & `AuthGardService`
-
-Add property `canActivated` to the "Authorize Zone" of main routes 
-(`explorer/src/app/app-routing.module.ts`)
-
-Implement `LoginComponent` 
-
-Create model `User` (`explorer/src/app/users/user.ts`)
-
-Generate and implement `UserService`
-
-Create interceptor for convert API response to appropriate data format for User model
-(`explorer/src/app/services/http-response-interceptor.ts`).
-
-Add interceptor as `provider` into `explorer/src/app/app.module.ts`
+Implement templates of components. Template's content of `ProfileComponent` must be inside the `<app-layout>` element
 
 
 

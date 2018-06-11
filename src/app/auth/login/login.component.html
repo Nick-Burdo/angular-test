@@ -2,29 +2,42 @@
   <div class="form-signin">
     <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
     <p>Status: {{message}}</p>
-<!--
-    <form class="mb-3">
-      <label for="inputEmail" class="sr-only">Email address</label>
-      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="">
-      <label for="inputPassword" class="sr-only">Password</label>
-      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-      <div class="checkbox mb-3">
-        <label>
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
-      </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
+    <div *ngIf="isLoginError" class="alert alert-danger">{{errorMessage}}</div>
+
+    <form class="mb-3" #loginForm="ngForm" (submit)="login()">
+      <label for="username" class="sr-only">Username</label>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="model.username"
+        #spy
+        class="form-control"
+        placeholder="Username"
+        required
+        autofocus >
+      <label for="password" class="sr-only">Password</label>
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="model.password"
+        #spy
+        class="form-control"
+        placeholder="Password"
+        required>
+      <button class="btn btn-lg btn-primary btn-block" type="submit" [disabled]="!loginForm.form.valid || pending">
+        <span *ngIf="pending; else elseBlock"><i class="fa fa-spinner fa-spin"></i></span>
+        <ng-template #elseBlock>
+          Sign In
+        </ng-template>
+      </button>
     </form>
--->
-    <button class="btn btn-lg btn-primary btn-block mb-3" (click)="login()" [disabled]="pending">
-      <span *ngIf="pending; else elseBlock2"><i class="fa fa-spinner fa-spin"></i></span>
-      <ng-template #elseBlock2>
-        Forse Sign In
-      </ng-template>
-    </button>
+
     <button class="btn btn-lg btn-primary btn-block" (click)="fbLogin()" [disabled]="pending">
-      <span *ngIf="pending; else elseBlock"><i class="fa fa-spinner fa-spin"></i></span>
-      <ng-template #elseBlock>
+      <span *ngIf="fbPending; else fbElseBlock"><i class="fa fa-spinner fa-spin"></i></span>
+      <ng-template #fbElseBlock>
         <i class="fa fa-facebook fa-fw"></i>
         Sign In via Facebook
       </ng-template>

@@ -1,21 +1,27 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from '../../services/auth.service';
-import {Router} from '@angular/router';
-import {delay, tap} from 'rxjs/operators';
-import {of} from 'rxjs/internal/observable/of';
-import {Observable} from 'rxjs/internal/Observable';
-import {HttpClient} from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { delay, tap } from 'rxjs/operators';
+import { of } from 'rxjs/internal/observable/of';
+import { Observable } from 'rxjs/internal/Observable';
+import { HttpClient } from '@angular/common/http';
+import { User } from '../../models/user';
 
 declare const FB: any;
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent implements OnInit {
+  model = new User();
   message: string;
   pending: boolean;
+  fbPending: boolean;
+  isLoginError = false;
+  errorMessage = 'Login error. Try later';
+
 
   constructor(private authService: AuthService, private router: Router) {
     this.setMessage();
@@ -34,23 +40,35 @@ export class LoginComponent implements OnInit {
 
   redirectAuthorized(): void {
     const redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/list';
-    this.router.navigate([redirect]);
+    this.router.navigate([ redirect ]);
   }
 
   login(): void {
     this.message = 'Try logged in...';
     this.pending = true;
-    this.authService.login().subscribe(() => {
-      this.setMessage();
-      if (this.authService.isAuthorized) {
-        this.redirectAuthorized();
-      }
-    });
+    this.isLoginError = false;
+    this.authService.login(this.model).subscribe(
+      result => {
+        this.setMessage();
+        if (this.authService.isAuthorized) {
+          this.redirectAuthorized();
+        }
+      },
+      error => {
+        this.isLoginError = true;
+        this.pending = false;
+        if (error.code === 422) {
+          this.errorMessage = error.result.reduce((result, item) => {
+            result += ' ' + item.message;
+            return result
+          }, 'Login error.')
+        }
+      });
   }
 
   fbLogin(): void {
     this.message = 'Try logged in...';
-    this.pending = true;
+    this.fbPending = true;
     FB.login(response => {
       console.log('LOGIN:', response);
       if (response.status === 'connected') {

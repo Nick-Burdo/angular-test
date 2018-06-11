@@ -17,7 +17,7 @@ export class AuthService {
   isAuthorized: boolean = false;
   token: string;
   redirectUrl: string;
-  FBStatus: string;
+  fBStatus: string;
 
   constructor(private router: Router, private http: HttpClient) {
     const tokenStorage = localStorage.getItem('token');
@@ -41,7 +41,10 @@ export class AuthService {
 
   fbLogin(code: string): Observable<any> {
     return this.http.post(`${API_URL}/user/login/facebook`, {code}).pipe(
-      catchError(handleHttpError('Post User Login Facebook'))
+      tap(result => {
+        this.isAuthorized = true;
+        this.setToken(result);
+      })
     );
   }
 
@@ -59,10 +62,6 @@ export class AuthService {
     this.isAuthorized = state;
   }
 
-  setFBStatus(status: string): void {
-    this.FBStatus = status;
-  }
-
   setLogout(): void {
     this.isAuthorized = false;
     this.setToken(null);
@@ -70,7 +69,7 @@ export class AuthService {
   }
 
   logout(): void {
-    if (this.FBStatus === 'connected') {
+    if (this.fBStatus === 'connected') {
       FB.logout(response => {
         this.setLogout();
       });

@@ -215,7 +215,7 @@ Connect Facebook SDK in `src/index.html`:
 Implement `init()`, `getStatus()` & `login()` functions of Facebook SDK
 (`src/app/auth/login/login.component.ts`). 
 
-Request login via Facebook to API.
+Implement request login via Facebook to API (`explorer/src/app/services/auth.service.ts`).
 
 #### Implement Templates
 

@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
   message: string;
   pending: boolean;
   fbPending: boolean;
+  fbAccessToken: string;
   isLoginError = false;
   errorMessage = 'Login error. Try later';
 
@@ -36,6 +37,7 @@ export class LoginComponent implements OnInit {
   setMessage(): void {
     this.message = `Logged ${this.authService.isAuthorized ? 'in' : 'out'}`;
     this.pending = false;
+    this.fbPending = false;
   }
 
   redirectAuthorized(): void {
@@ -67,24 +69,47 @@ export class LoginComponent implements OnInit {
   }
 
   fbLogin(): void {
-    this.message = 'Try logged in...';
     this.fbPending = true;
-    FB.login(response => {
-      console.log('LOGIN:', response);
-      if (response.status === 'connected') {
+    if (this.authService.fBStatus === 'connected') {
+      this.loginByFbToken(this.fbAccessToken);
+    } else {
+      this.message = 'Try get FB access token...';
+      FB.login(response => {
+        this.authService.fBStatus = response.status;
+        if (response.status === 'connected') {
+          this.loginByFbToken(response.authResponse.accessToken)
+        } else {
+          this.fbLoginError();
+        }
+      });
+    }
+  }
 
-        console.log('ACCESS DATA', response.authResponse);
-
-        this.authService.fbLogin(response.authResponse.accessToken).subscribe((res) => {
-          console.log('API FB LOGIN RESULT', res);
-        });
-      } else {
+  loginByFbToken(token: string): void {
+    this.message = 'Try logged in by FB token...';
+/*  TODO: API login via Facebook token does not work now. Used fake login instead. */
+    // this.authService.fbLogin(token).subscribe(
+/*  TODO: begin of fake login part */
+    this.model.username = 'nikburdo@gmail.com';
+    this.model.password = '123456';
+    this.authService.login(this.model).subscribe(
+/*  TODO: end of fake login part */
+      (res) => {
         this.setMessage();
-      }
-      // this.authService.setAuthorized(true);
-      this.authService.setFBStatus(response.status);
-      // this.redirectAuthorized();
-    });
+        if (this.authService.isAuthorized) {
+          this.redirectAuthorized();
+        }
+      },
+      error => {
+        console.error('Login via Facebook failed:', error);
+        this.fbLoginError();
+      });
+  }
+
+  fbLoginError(): void {
+    this.setMessage();
+    this.errorMessage = 'Error login via Facebook.';
+    this.isLoginError = true;
   }
 
   logout(): void {
@@ -94,14 +119,10 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     FB.getLoginStatus(response => {
+      this.authService.fBStatus = response.status;
       if (response.status === 'connected') {
-        this.authService.setAuthorized(true);
-        this.redirectAuthorized();
+        this.fbAccessToken = response.authResponse.accessToken;
       }
-      this.authService.setFBStatus(response.status);
-
-      console.log('STATUS ON INIT:', response);
-
     });
   }
 

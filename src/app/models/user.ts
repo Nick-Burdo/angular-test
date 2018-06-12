@@ -7,8 +7,8 @@ export class User {
   last_name: string;
   email: string;
   image: string;
-  lat: string;
-  lon: string;
+  lat: number;
+  lon: number;
   gender: string;
   created_at: string;
   updated_at: string

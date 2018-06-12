@@ -3,7 +3,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { Profile } from '../../models/profile';
 
-declare const FB: any;
+declare const FB;
 
 @Component({
   selector: 'app-login',
@@ -72,6 +72,24 @@ export class LoginComponent implements OnInit {
       this.message = 'Try get FB access token...';
       FB.login(response => {
         this.authService.fBStatus = response.status;
+        if (response.status === 'connected') {
+          this.loginByFbToken(response.authResponse.accessToken)
+        } else {
+          this.fbLoginError();
+        }
+      });
+    }
+  }
+
+  fbLogin1(): void {
+    this.fbPending = true;
+    if (this.authService.fBStatus === 'connected') {
+      this.loginByFbToken(this.fbAccessToken);
+    } else {
+      this.message = 'Try get FB access token...';
+      FB.login(response => {
+        this.authService.fBStatus = response.status;
+
         if (response.status === 'connected') {
           this.loginByFbToken(response.authResponse.accessToken)
         } else {

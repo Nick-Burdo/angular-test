@@ -188,6 +188,25 @@ Imports `UiModule` in the `explorer/src/app/users/users.module.ts`
 
 Implement template's content of components, each must be inside the `<app-layout>` element
 
+#### Inject Google Map
+
+Install Google Maps types for typescript support.
+```
+$ yarn add @types/googlemaps
+```
+
+Link Google Maps JavaScript CDN inside `explorer/src/index.html`
+```
+<script src=”http://maps.googleapis.com/maps/api/js"></script>
+```
+
+Add a placeholder <div> for GMap inside `explorer/src/app/users/map/map.component.html`
+```
+<div #gmap style=”width:100%;height:400px”></div>
+```
+
+Implement Map Page component `explorer/src/app/users/map/map.component.ts`
+
 ### Create Login Page & Profile Page
 
 Generate `AuthModule`:

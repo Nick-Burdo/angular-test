@@ -9,17 +9,13 @@ import { User } from '../../models/user';
 })
 export class ListComponent implements OnInit {
   users: User[];
+  placeholderImage = 'http://placehold.it/100x100';
 
   constructor(private userService: UserService) {
   }
 
   getUsers():void {
-    this.userService.getUsers().subscribe(
-      users => {
-        console.log('USERS:', users);
-        this.users = users;
-      }
-    )
+    this.userService.getUsers().subscribe(users => this.users = users)
   }
 
   ngOnInit() {

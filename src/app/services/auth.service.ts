@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import { catchError, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { API_URL } from '../config';
-import { handleHttpError } from './handle-http-error';
-import { User } from '../models/user';
-import { Token } from '../models/token';
+import { TokenService } from './token.service';
+import { Profile } from '../models/profile';
 
 declare const FB: any;
 
@@ -15,26 +14,21 @@ declare const FB: any;
 })
 export class AuthService {
   isAuthorized: boolean = false;
-  token: string;
   redirectUrl: string;
   fBStatus: string;
 
-  constructor(private router: Router, private http: HttpClient) {
-    const tokenStorage = localStorage.getItem('token');
-    if (tokenStorage) {
-      const token = JSON.parse(tokenStorage);
-      if (token.token && token.expired_at > Date.now() / 1000) {
-        this.isAuthorized = true;
-        this.token = token.token;
-      }
+  constructor(private router: Router, private http: HttpClient, private tokenService: TokenService) {
+    const token = this.tokenService.getToken();
+    if (token.token && token.expired_at > Date.now() / 1000) {
+      this.isAuthorized = true;
     }
-   }
+  }
 
-  login(model: User): Observable<any> {
+  login(model: Profile): Observable<any> {
     return this.http.post(`${API_URL}/user/login`, model).pipe(
       tap(result => {
         this.isAuthorized = true;
-        this.setToken(result);
+        this.tokenService.setToken(result);
       })
     );
   }
@@ -43,19 +37,9 @@ export class AuthService {
     return this.http.post(`${API_URL}/user/login/facebook`, {code}).pipe(
       tap(result => {
         this.isAuthorized = true;
-        this.setToken(result);
+        this.tokenService.setToken(result);
       })
     );
-  }
-
-  setToken(data: Token): void {
-    if (data && data.token) {
-      localStorage.setItem('token', JSON.stringify(data));
-      this.token = data.token;
-    } else {
-      localStorage.removeItem('token');
-      this.token = null;
-    }
   }
 
   setAuthorized(state: boolean): void {
@@ -64,7 +48,7 @@ export class AuthService {
 
   setLogout(): void {
     this.isAuthorized = false;
-    this.setToken(null);
+    this.tokenService.setToken(null);
     this.router.navigate([ '/login' ]);
   }
 

@@ -1,15 +1,17 @@
 <nav class="navbar navbar-dark bg-primary mb-5">
-  <a class="navbar-brand" routerLink="/">Explorer</a>
-  <div class="navbar-expand ml-auto">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/list" routerLinkActive="active">List</a>
-      <a class="nav-item nav-link" routerLink="/map" routerLinkActive="active">Map</a>
+  <div class="container">
+    <a class="navbar-brand" routerLink="/">Explorer</a>
+    <div class="navbar-expand ml-auto">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/users" routerLinkActive="active">List</a>
+        <a class="nav-item nav-link" routerLink="/map" routerLinkActive="active">Map</a>
+      </div>
     </div>
-  </div>
-  <div class="navbar-expand ml-auto">
-    <div class="navbar-nav">
-      <a class="nav-item nav-link" routerLink="/profile" routerLinkActive="active">My Profile</a>
-      <button class="btn btn-link nav-item nav-link" (click)="logout()">Log Out</button>
+    <div class="navbar-expand ml-auto">
+      <div class="navbar-nav">
+        <a class="nav-item nav-link" routerLink="/profile" routerLinkActive="active">My Profile</a>
+        <button class="btn btn-link nav-item nav-link" (click)="logout()">Log Out</button>
+      </div>
     </div>
   </div>
 </nav>

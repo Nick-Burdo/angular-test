@@ -1,3 +1,30 @@
-<p>
-  user-profile works!
-</p>
+<app-layout>
+  <div class="user-detail">
+    <h3>
+      {{user.first_name}}
+      {{user.last_name}}
+      {{!user.first_name && !user.last_name ? user.username : null}}
+    </h3>
+
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <img class="user-image" [src]="user.image || placeholderImage" alt="{{user.username}}">
+      </div>
+      <div class="col-md-8 col-lg-9">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let param of publicData">
+            <div class="row">
+              <div class="col-6 col-md-4 col-lg-3">{{param.title}}</div>
+              <div class="col-6 col-md-8 col-lg-9 text-muted">{{user[param.name]}}</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+
+    <div class="user-detail-footer">
+      <button class="btn btn-info" (click)="goBack()">Go back</button>
+    </div>
+  </div>
+</app-layout>

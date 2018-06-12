@@ -1,12 +1,20 @@
 <app-layout>
-  <p>
-    list works!
-  </p>
-  <ul>
-    <li *ngFor="let user of users">
-      {{user.first_name}}
-      {{user.last_name}}
-      {{!user.first_name && !user.last_name ? user.username : null}}
-    </li>
-  </ul>
+  <div class="row user-list">
+    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6" *ngFor="let user of users">
+      <a routerLink="/users/{{user.id}}" class="user-list-item">
+        <div class="card text-center shadow">
+          <div class="card-image">
+            <img class="card-img-top" [src]="user.image || placeholderImage" alt="Card image cap">
+          </div>
+          <div class="card-body">
+            <div class="card-title">
+              {{user.first_name}}
+              {{user.last_name}}
+              {{!user.first_name && !user.last_name ? user.username : null}}
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
 </app-layout>

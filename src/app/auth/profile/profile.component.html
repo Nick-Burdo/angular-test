@@ -1,5 +1,54 @@
 <app-layout>
-  <p>
-    profile works!
-  </p>
+  <div class="profile-detail">
+    <h3>
+      {{profile.first_name}}
+      {{profile.last_name}}
+      {{!profile.first_name && !profile.last_name ? profile.username : null}}
+    </h3>
+
+    <div class="row">
+      <div class="col-md-4 col-lg-3">
+        <img class="profile-image" [src]="profile.image || placeholderImage" alt="{{profile.username}}">
+      </div>
+      <div class="col-md-8 col-lg-9">
+        <form #profileForm="ngForm" (ngSubmit)="onSubmit()" id="profile_form">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item" *ngFor="let param of publicData">
+            <div class="row">
+              <div class="col-6 col-md-4 col-lg-3">
+                {{param.title}}
+                &nbsp;
+                <small *ngIf="param.required">
+                  <i class="fa fa-star text-danger"></i>
+                </small>
+              </div>
+              <div class="col-6 col-md-8 col-lg-9 text-muted">
+                <input
+                  *ngIf="param.name !== 'gender'; else elseBlock"
+                  [(ngModel)]="profile[param.name]"
+                  name="{{param.name}}"
+                  type="text"
+                  class="form-control profile-control"
+                  [required]="param.required">
+                <ng-template #elseBlock>
+                  <select class="form-control profile-control" [(ngModel)]="profile[param.name]" name="{{param.name}}">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                  </select>
+                </ng-template>
+              </div>
+            </div>
+          </li>
+        </ul>
+        </form>
+      </div>
+    </div>
+
+
+    <div class="profile-detail-footer">
+      <button class="btn btn-info" (click)="goBack()">Go back</button>
+      &nbsp;
+      <button type="submit" form="profile_form" class="btn btn-success" [disabled]="!profileForm.form.valid">Save</button>
+    </div>
+  </div>
 </app-layout>

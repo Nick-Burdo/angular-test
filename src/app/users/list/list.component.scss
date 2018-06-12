@@ -1,0 +1,37 @@
+.user-list {
+  margin-bottom: 60px;
+  .user-list-item {
+    .card {
+      margin-bottom: 20px;
+      .card-image {
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .card-body {
+        padding: 0.25rem;
+        height: 65px;
+      }
+      @media (min-width: 576px) {
+        .card-image {
+          width: 198px;
+          height: 198px;
+        }
+      }
+      @media (min-width: 768px) {
+        .card-image {
+          width: 168px;
+          height: 168px;
+        }
+      }
+      @media (min-width: 1200px) {
+        .card-image {
+          width: 138px;
+          height: 138px;
+          margin: 10px;
+        }
+      }
+    }
+  }
+}

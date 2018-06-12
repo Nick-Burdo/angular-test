@@ -1,0 +1,15 @@
+.profile-detail {
+  .profile-image {
+    max-width: 100%;
+  }
+  .profile-control {
+    border-color: #eee;
+    &.ng-invalid {
+      border-color: red;
+
+    }
+  }
+  .profile-detail-footer {
+    margin: 20px 0 60px;
+  }
+}

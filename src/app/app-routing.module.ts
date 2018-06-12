@@ -10,11 +10,11 @@ import { UserProfileComponent } from './users/user-profile/user-profile.componen
 
 const routes: Routes = [
   {path: 'login', component: LoginComponent},
-  {path: 'list', component: ListComponent, canActivate: [ AuthGardService ]},
+  {path: 'users', component: ListComponent, canActivate: [ AuthGardService ]},
   {path: 'map', component: MapComponent, canActivate: [ AuthGardService ]},
-  {path: 'profile/:id', component: UserProfileComponent, canActivate: [ AuthGardService ]},
+  {path: 'users/:id', component: UserProfileComponent, canActivate: [ AuthGardService ]},
   {path: 'profile', component: ProfileComponent, canActivate: [ AuthGardService ]},
-  {path: '', redirectTo: '/list', pathMatch: 'full'},
+  {path: '', redirectTo: '/users', pathMatch: 'full'},
   {path: '**', component: PageNotFoundComponent}
 ];
 

@@ -1,11 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { delay, tap } from 'rxjs/operators';
-import { of } from 'rxjs/internal/observable/of';
-import { Observable } from 'rxjs/internal/Observable';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../../models/user';
+import { Profile } from '../../models/profile';
 
 declare const FB: any;
 
@@ -15,7 +11,7 @@ declare const FB: any;
   styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent implements OnInit {
-  model = new User();
+  model = new Profile();
   message: string;
   pending: boolean;
   fbPending: boolean;
@@ -41,7 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   redirectAuthorized(): void {
-    const redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/list';
+    const redirect = this.authService.redirectUrl ? this.authService.redirectUrl : '/users';
     this.router.navigate([ redirect ]);
   }
 
